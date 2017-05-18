@@ -1,16 +1,12 @@
 #!/usr/bin/env node
-/*
-Written by eggshell
-05/17/2017
-modification of examples/dumpfile.js from saul/demofile
-*/
 
 'use strict';
 
 var fs = require('fs');
 var assert = require('assert');
 var csvWriter = require('csv-write-stream');
-var demo = require('/usr/local/lib/node_modules/demofile/demo');
+var nodePath = process.env.NODE_PATH;
+var demo = require(nodePath + '/demofile/demo');
 
 function parseDemoFile(path) {
   fs.readFile(path, function (err, buffer) {

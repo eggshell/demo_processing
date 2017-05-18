@@ -13,6 +13,11 @@ files to be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watso
 
 ## Usage
 
+First ensure that you have set the `$NODE_PATH` environment variable and that
+this path corresponds to the `node_modules` dir in which `demofile` and
+`csv-write-stream` are located. I have them installed globally, but you can
+opt to not do that.
+
 ```shell
 $ ./demo_processing.js /path/to/demo/file.dem
 ```
