@@ -1,8 +1,8 @@
 # demo_processing
 
 node.js script utilizing [saul/demofile](https://github.com/saul/demofile) to
-parse Counter-Strike: Global Offensive demo files and output data to .csv files
-to be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-analytics/us-en/).
+parse Counter-Strike: Global Offensive demo files and output data to `.csv`
+files to be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-analytics/us-en/).
 
 ## Requirements
 
@@ -16,3 +16,19 @@ to be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-anal
 ```shell
 $ ./demo_processing.js /path/to/demo/file.dem
 ```
+
+### Stats Measured
+
+Currently, `demo_processing` supports tracking the following stats on player
+death events:
+
+* map name
+* attacker
+* victim
+* weapon used by attacker
+* remaining health of attacker after kill
+
+## Acknowledgements
+
+Thanks to [saul](https://github.com/saul) for the MIT-licensed `demofile`
+Node.js library.
