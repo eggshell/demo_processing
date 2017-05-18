@@ -11,9 +11,22 @@ var demo = require(nodePath + '/demofile/demo');
 function parseDemoFile(path) {
   fs.readFile(path, function (err, buffer) {
     assert.ifError(err);
+    var csgoDataFile = 'csgo_data.csv';
 
+    if (!fs.existsSync(csgoDataFile)) {
+      var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon", "attackerHealth"]});
+      writer.pipe(fs.createWriteStream(csgoDataFile));
+    }
+    else {
+      var writer = csvWriter({sendHeaders: false});
+      writer.pipe(fs.createWriteStream(csgoDataFile, {flags: 'a'}));
+    }
+
+/*
     var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon", "attackerHealth"]});
-    writer.pipe(fs.createWriteStream('csgo_data.csv'));
+    writer.pipe(fs.createWriteStream(csgoDataFile, {flags: 'a'}));
+*/
+
     var demoFile = new demo.DemoFile();
     var mapName;
 
@@ -22,13 +35,14 @@ function parseDemoFile(path) {
     });
 
     demoFile.on('end', () => {
+      writer.end();
     });
 
     demoFile.gameEvents.on('player_death', e => {
       let victim = demoFile.entities.getByUserId(e.userid);
       let attacker = demoFile.entities.getByUserId(e.attacker);
       if (victim && attacker) {
-        writer.write([mapName, attacker.name, victim.name, e.weapon, attacker.health]);
+        writer.write({map: mapName, attacker: attacker.name, victim: victim.name, weapon: e.weapon, attackerHealth: attacker.health});
       }
     });
 
@@ -37,3 +51,9 @@ function parseDemoFile(path) {
 }
 
 parseDemoFile(process.argv[2]);
+
+/*
+for (var i = 2; i < process.argv.length; i++) {
+  parseDemoFile(process.argv[i]);
+}
+*/

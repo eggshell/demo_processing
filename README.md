@@ -1,8 +1,10 @@
 # demo_processing
 
-node.js script utilizing [saul/demofile](https://github.com/saul/demofile) to
-parse Counter-Strike: Global Offensive demo files and output data to `.csv`
-files to be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-analytics/us-en/).
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+script utilizing [saul/demofile](https://github.com/saul/demofile) to parse
+Counter-Strike: Global Offensive demo files and output data to `.csv` files to
+be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-analytics/us-en/).
 
 ## Requirements
 
@@ -18,9 +20,14 @@ this path corresponds to the `node_modules` dir in which `demofile` and
 `csv-write-stream` are located. I have them installed globally, but you can
 opt to not do that.
 
+Next, throw some `.dem` files into a `demos` dir located in this project's root
+directory. Then `run.sh` can be used to run `demo_processing.js` on the dataset.
+
 ```shell
-$ ./demo_processing.js /path/to/demo/file.dem
+$ ./run.sh
 ```
+
+This will generate a `csgo_data.csv` file for use with Watson Analytics.
 
 ### Stats Measured
 
