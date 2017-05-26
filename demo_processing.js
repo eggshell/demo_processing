@@ -14,7 +14,7 @@ function parseDemoFile(path) {
     var csgoDataFile = 'csgo_data.csv';
 
     if (!fs.existsSync(csgoDataFile)) {
-      var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon", "attackerHealth"]});
+      var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon", "attackerHealth", "headshot"]});
       writer.pipe(fs.createWriteStream(csgoDataFile));
     }
     else {
@@ -42,7 +42,7 @@ function parseDemoFile(path) {
       let victim = demoFile.entities.getByUserId(e.userid);
       let attacker = demoFile.entities.getByUserId(e.attacker);
       if (victim && attacker) {
-        writer.write({map: mapName, attacker: attacker.name, victim: victim.name, weapon: e.weapon, attackerHealth: attacker.health});
+        writer.write({map: mapName, attacker: attacker.name, victim: victim.name, weapon: e.weapon, attackerHealth: attacker.health, headshot: e.headshot});
       }
     });
 
