@@ -7,7 +7,7 @@ var assert = require('assert');
 var csvWriter = require('csv-write-stream');
 var nodePath = process.env.NODE_PATH;
 var demo = require(nodePath + '/demofile/demo');
-const emptyCell = 0;
+const emptyCell = "";
 
 function parseDemoFile(path) {
   fs.readFile(path, function (err, buffer) {
