@@ -1,6 +1,6 @@
 # demo_processing
 
- [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 script utilizing [saul/demofile](https://github.com/saul/demofile) to parse
 Counter-Strike: Global Offensive demo files and output data to `.csv` files to

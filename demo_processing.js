@@ -14,18 +14,16 @@ function parseDemoFile(path) {
     var csgoDataFile = 'csgo_data.csv';
 
     if (!fs.existsSync(csgoDataFile)) {
-      var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon", "attackerHealth", "headshot"]});
+      var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon",
+                                        "attackerHealth", "headshot",
+                                        "remainingHealth", "remainingArmor",
+                                        "hitgroup"]});
       writer.pipe(fs.createWriteStream(csgoDataFile));
     }
     else {
       var writer = csvWriter({sendHeaders: false});
       writer.pipe(fs.createWriteStream(csgoDataFile, {flags: 'a'}));
     }
-
-/*
-    var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon", "attackerHealth"]});
-    writer.pipe(fs.createWriteStream(csgoDataFile, {flags: 'a'}));
-*/
 
     var demoFile = new demo.DemoFile();
     var mapName;
@@ -38,11 +36,45 @@ function parseDemoFile(path) {
       writer.end();
     });
 
+    demoFile.gameEvents.on('player_hurt', e => {
+      let victim = demoFile.entities.getByUserId(e.userid);
+      let attacker = demoFile.entities.getByUserId(e.attacker);
+
+      if (e.hitgroup == 1) {
+        var headshot = true
+      }
+      else {
+        var headshot = false
+      }
+
+      var hitgroup = determineHitGroup(e.hitgroup);
+
+      if (victim && attacker) {
+        writer.write({map: mapName, attacker: attacker.name,
+                      victim: victim.name, weapon: e.weapon,
+                      attackerHealth: attacker.health, headshot: headshot,
+                      remainingHealth: victim.health,
+                      remainingArmor: victim.armor, hitgroup: hitgroup});
+      }
+    });
+
     demoFile.gameEvents.on('player_death', e => {
       let victim = demoFile.entities.getByUserId(e.userid);
       let attacker = demoFile.entities.getByUserId(e.attacker);
+
+      if (e.headshot) {
+        var hitgroup = "Head"
+      }
+      else {
+        var hitgroup = "None"
+      }
+
       if (victim && attacker) {
-        writer.write({map: mapName, attacker: attacker.name, victim: victim.name, weapon: e.weapon, attackerHealth: attacker.health, headshot: e.headshot});
+        writer.write({map: mapName, attacker: attacker.name,
+                      victim: victim.name, weapon: e.weapon,
+                      attackerHealth: attacker.health, headshot: e.headshot,
+                      remainingHealth: victim.health,
+                      remainingArmor: victim.armor, hitgroup: hitgroup});
       }
     });
 
@@ -50,10 +82,34 @@ function parseDemoFile(path) {
   });
 }
 
-parseDemoFile(process.argv[2]);
+function determineHitGroup(hitgroup){
+  var finalHitGroup = "None";
 
-/*
-for (var i = 2; i < process.argv.length; i++) {
-  parseDemoFile(process.argv[i]);
+  switch(hitgroup) {
+    case 1:
+      finalHitGroup = "Head";
+      break;
+    case 2:
+      finalHitGroup = "Upper Torso";
+      break;
+    case 3:
+      finalHitGroup = "Lower Torso";
+      break;
+    case 4:
+      finalHitGroup = "Left Arm";
+      break;
+    case 5:
+      finalHitGroup = "Right Arm";
+      break;
+    case 6:
+      finalHitGroup = "Left Leg";
+      break;
+    case 7:
+      finalHitGroup = "Right Leg";
+      break;
+  }
+
+  return finalHitGroup;
 }
-*/
+
+parseDemoFile(process.argv[2]);
