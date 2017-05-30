@@ -7,6 +7,7 @@ var assert = require('assert');
 var csvWriter = require('csv-write-stream');
 var nodePath = process.env.NODE_PATH;
 var demo = require(nodePath + '/demofile/demo');
+const emptyCell = 0;
 
 function parseDemoFile(path) {
   fs.readFile(path, function (err, buffer) {
@@ -14,10 +15,11 @@ function parseDemoFile(path) {
     var csgoDataFile = 'csgo_data.csv';
 
     if (!fs.existsSync(csgoDataFile)) {
-      var writer = csvWriter({headers: ["map", "attacker", "victim", "weapon",
-                                        "attackerHealth", "headshot",
-                                        "remainingHealth", "remainingArmor",
-                                        "hitgroup"]});
+      var writer = csvWriter({headers: ["eventType", "map", "attacker",
+                                        "victim", "weapon", "attackerHealth",
+                                        "headshot", "remainingHealth",
+                                        "remainingArmor", "hitgroup",
+                                        "winningTeam", "winReason"]});
       writer.pipe(fs.createWriteStream(csgoDataFile));
     }
     else {
@@ -48,13 +50,13 @@ function parseDemoFile(path) {
       }
 
       var hitgroup = determineHitGroup(e.hitgroup);
-
       if (victim && attacker) {
-        writer.write({map: mapName, attacker: attacker.name,
-                      victim: victim.name, weapon: e.weapon,
-                      attackerHealth: attacker.health, headshot: headshot,
-                      remainingHealth: victim.health,
-                      remainingArmor: victim.armor, hitgroup: hitgroup});
+        writer.write({eventType: "player_hurt", map: mapName,
+                      attacker: attacker.name, victim: victim.name,
+                      weapon: e.weapon, attackerHealth: attacker.health,
+                      headshot: headshot, remainingHealth: victim.health,
+                      remainingArmor: victim.armor, hitgroup: hitgroup,
+                      winningTeam: emptyCell, winReason: emptyCell});
       }
     });
 
@@ -70,12 +72,28 @@ function parseDemoFile(path) {
       }
 
       if (victim && attacker) {
-        writer.write({map: mapName, attacker: attacker.name,
-                      victim: victim.name, weapon: e.weapon,
-                      attackerHealth: attacker.health, headshot: e.headshot,
-                      remainingHealth: victim.health,
-                      remainingArmor: victim.armor, hitgroup: hitgroup});
+        writer.write({eventType: "player_death", map: mapName,
+                      attacker: attacker.name, victim: victim.name,
+                      weapon: e.weapon, attackerHealth: attacker.health,
+                      headshot: e.headshot, remainingHealth: victim.health,
+                      remainingArmor: victim.armor, hitgroup: hitgroup,
+                      winningTeam: emptyCell, winReason: emptyCell});
       }
+    });
+
+    demoFile.gameEvents.on('round_end', e => {
+      if (e.winner == 2) {
+        var winningTeam = "Terrorists"
+      }
+      else if (e.winner == 3) {
+        var winningTeam = "Counter-Terrorists"
+      }
+      writer.write({eventType: "round_end", map: mapName,
+                    attacker: emptyCell, victim: emptyCell,
+                    weapon: emptyCell, attackerHealth: emptyCell,
+                    headshot: emptyCell, remainingHealth: emptyCell,
+                    remainingArmor: emptyCell, hitgroup: emptyCell,
+                    winningTeam: winningTeam, winReason: e.message.substring(13)});
     });
 
     demoFile.parse(buffer);
