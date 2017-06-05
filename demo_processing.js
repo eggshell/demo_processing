@@ -101,33 +101,17 @@ function parseDemoFile(path) {
 }
 
 function determineHitGroup(hitgroup){
-  var finalHitGroup = "None";
-
-  switch(hitgroup) {
-    case 1:
-      finalHitGroup = "Head";
-      break;
-    case 2:
-      finalHitGroup = "Upper Torso";
-      break;
-    case 3:
-      finalHitGroup = "Lower Torso";
-      break;
-    case 4:
-      finalHitGroup = "Left Arm";
-      break;
-    case 5:
-      finalHitGroup = "Right Arm";
-      break;
-    case 6:
-      finalHitGroup = "Left Leg";
-      break;
-    case 7:
-      finalHitGroup = "Right Leg";
-      break;
-  }
-
-  return finalHitGroup;
+  var hitgroups = {
+    '1': 'Head',
+    '2': 'Upper Torso',
+    '3': 'Lower Torso',
+    '4': 'Left Arm',
+    '5': 'Right Arm',
+    '6': 'Left Leg',
+    '7': 'Right Leg',
+    'default': 'None'
+  };
+  return hitgroups[hitgroup] || hitgroups['default'];
 }
 
 parseDemoFile(process.argv[2]);
