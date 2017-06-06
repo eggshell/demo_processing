@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
-'use strict';
+"use strict";
 
-var fs = require('fs');
-var assert = require('assert');
-var csvWriter = require('csv-write-stream');
+var fs = require("fs");
+var assert = require("assert");
+var csvWriter = require("csv-write-stream");
 var nodePath = process.env.NODE_PATH;
-var demo = require(nodePath + '/demofile/demo');
+var demo = require(nodePath + "/demofile/demo");
 const emptyCell = "";
 
 function parseDemoFile(path) {
   fs.readFile(path, function (err, buffer) {
     assert.ifError(err);
-    var csgoDataFile = 'csgo_data.csv';
+    var csgoDataFile = "csgo_data.csv";
 
     if (!fs.existsSync(csgoDataFile)) {
       var writer = csvWriter({headers: ["eventType", "map", "attacker",
@@ -24,21 +24,21 @@ function parseDemoFile(path) {
     }
     else {
       var writer = csvWriter({sendHeaders: false});
-      writer.pipe(fs.createWriteStream(csgoDataFile, {flags: 'a'}));
+      writer.pipe(fs.createWriteStream(csgoDataFile, {flags: "a"}));
     }
 
     var demoFile = new demo.DemoFile();
     var mapName;
 
-    demoFile.on('start', () => {
+    demoFile.on("start", () => {
       mapName = demoFile.header.mapName;
     });
 
-    demoFile.on('end', () => {
+    demoFile.on("end", () => {
       writer.end();
     });
 
-    demoFile.gameEvents.on('player_hurt', e => {
+    demoFile.gameEvents.on("player_hurt", e => {
       let victim = demoFile.entities.getByUserId(e.userid);
       let attacker = demoFile.entities.getByUserId(e.attacker);
 
@@ -60,7 +60,7 @@ function parseDemoFile(path) {
       }
     });
 
-    demoFile.gameEvents.on('player_death', e => {
+    demoFile.gameEvents.on("player_death", e => {
       let victim = demoFile.entities.getByUserId(e.userid);
       let attacker = demoFile.entities.getByUserId(e.attacker);
 
@@ -81,7 +81,7 @@ function parseDemoFile(path) {
       }
     });
 
-    demoFile.gameEvents.on('round_end', e => {
+    demoFile.gameEvents.on("round_end", e => {
       if (e.winner == 2) {
         var winningTeam = "Terrorists"
       }
@@ -102,16 +102,16 @@ function parseDemoFile(path) {
 
 function determineHitGroup(hitgroup){
   var hitgroups = {
-    '1': 'Head',
-    '2': 'Upper Torso',
-    '3': 'Lower Torso',
-    '4': 'Left Arm',
-    '5': 'Right Arm',
-    '6': 'Left Leg',
-    '7': 'Right Leg',
-    'default': 'None'
+    "1": "Head",
+    "2": "Upper Torso",
+    "3": "Lower Torso",
+    "4": "Left Arm",
+    "5": "Right Arm",
+    "6": "Left Leg",
+    "7": "Right Leg",
+    "default": "None"
   };
-  return hitgroups[hitgroup] || hitgroups['default'];
+  return hitgroups[hitgroup] || hitgroups["default"];
 }
 
 parseDemoFile(process.argv[2]);
