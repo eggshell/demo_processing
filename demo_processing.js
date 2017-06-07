@@ -2,11 +2,6 @@
 
 "use strict";
 
-var fs = require("fs");
-var assert = require("assert");
-var csvWriter = require("csv-write-stream");
-var nodePath = process.env.NODE_PATH;
-var demo = require(nodePath + "/demofile/demo");
 const emptyCell = "";
 
 function determineHitGroup(hitgroup){
@@ -23,7 +18,8 @@ function determineHitGroup(hitgroup){
   return hitgroups[hitgroup] || hitgroups["default"];
 }
 
-function openDataFile(){
+function openDataFile(fs){
+  var csvWriter = require("csv-write-stream");
   var csgoDataFile = "csgo_data.csv";
   if (!fs.existsSync(csgoDataFile)) {
     var writer = csvWriter({headers: ["eventType", "map", "attacker",
@@ -99,10 +95,15 @@ function handleRoundEnd(e, mapName, writer){
 }
 
 function parseDemoFile(path) {
+  var fs = require("fs");
+  var assert = require("assert");
+  var nodePath = process.env.NODE_PATH;
+  var demo = require(nodePath + "/demofile/demo");
+
   fs.readFile(path, function (err, buffer) {
     assert.ifError(err);
 
-    var writer = openDataFile();
+    var writer = openDataFile(fs);
     var demoFile = new demo.DemoFile();
     var mapName;
 
