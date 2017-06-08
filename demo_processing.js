@@ -4,7 +4,7 @@
 
 const emptyCell = "";
 
-function determineHitGroup(hitgroup){
+function determineHitGroup(hitgroup) {
   var hitgroups = {
     "1": "Head",
     "2": "Upper Torso",
@@ -18,7 +18,7 @@ function determineHitGroup(hitgroup){
   return hitgroups[hitgroup] || hitgroups["default"];
 }
 
-function openDataFile(fs){
+function openDataFile(fs) {
   var csvWriter = require("csv-write-stream");
   var csgoDataFile = "csgo_data.csv";
   if (!fs.existsSync(csgoDataFile)) {
@@ -36,7 +36,7 @@ function openDataFile(fs){
   return writer;
 }
 
-function handlePlayerHurt(demoFile, e, mapName, writer){
+function handlePlayerHurt(demoFile, e, mapName, writer) {
   let victim = demoFile.entities.getByUserId(e.userid);
   let attacker = demoFile.entities.getByUserId(e.attacker);
 
@@ -58,7 +58,7 @@ function handlePlayerHurt(demoFile, e, mapName, writer){
   }
 }
 
-function handlePlayerDeath(demoFile, e, mapName, writer){
+function handlePlayerDeath(demoFile, e, mapName, writer) {
   let victim = demoFile.entities.getByUserId(e.userid);
   let attacker = demoFile.entities.getByUserId(e.attacker);
 
@@ -79,7 +79,7 @@ function handlePlayerDeath(demoFile, e, mapName, writer){
   }
 }
 
-function handleRoundEnd(e, mapName, writer){
+function handleRoundEnd(e, mapName, writer) {
   if (e.winner == 2) {
     var winningTeam = "Terrorists"
   }
