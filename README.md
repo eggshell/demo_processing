@@ -15,7 +15,7 @@ be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-analyti
 
 ## Usage
 
-Next, throw some `.dem` files into a `demos` dir located in this project's root
+Place your `.dem` files into a `demos` dir located in this project's root
 directory. Then `run.sh` can be used to run `demo_processing.js` on the dataset.
 
 ```shell
