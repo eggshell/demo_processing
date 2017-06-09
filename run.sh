@@ -13,22 +13,22 @@ function determine_demos_dir() {
 }
 
 function check_for_demos() {
-  local demos_path="$(ls $1)"
+  local demos_list="$(ls $1)"
   local __result="$2"
-  local empty_path=false
+  local empty_list=false
 
-  if [[ -z "$demos_path" ]]; then
-    empty_path=true
+  if [[ -z "$demos_list" ]]; then
+    empty_list=true
   fi
 
-  eval $__result="$empty_path"
+  eval $__result="$empty_list"
 }
 
 function main() {
   determine_demos_dir path
-  check_for_demos $path bool
+  check_for_demos $path empty_list
 
-  if [[ "$bool" == true ]]; then
+  if [[ "$empty_list" == true ]]; then
     echo "Demos dir is empty!" >&2
     exit 1
   fi
