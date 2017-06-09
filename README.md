@@ -16,10 +16,10 @@ be analyzed with [Watson Analytics](https://www.ibm.com/analytics/watson-analyti
 ## Usage
 
 Place your `.dem` files into a `demos` dir located in this project's root
-directory. Then `run.sh` can be used to run `demo_processing.js` on the dataset.
+directory. Then `process.sh` can be used to run `demo_processing.js` on the dataset.
 
 ```shell
-$ ./run.sh
+$ ./process.sh
 ```
 
 This will generate a `csgo_data.csv` file for use with Watson Analytics.
@@ -35,7 +35,7 @@ The following environment variables are required:
 The following environment variables are optional:
 
   * `DEMOS_DIR` : path to a directory containing n number of demo files
-    to be analyzed. If unset, `run.sh` will check the root directory of
+    to be analyzed. If unset, `process.sh` will check the root directory of
     this project for a `demos` dir and use that.
 
 ### Stats Measured
